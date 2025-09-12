@@ -1,4 +1,4 @@
-# EVR628_Portfolio
+# evr628_portfolio
 
 # My first repo
 
