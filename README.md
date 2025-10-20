@@ -58,10 +58,10 @@ Generate a starter table of column names and types:
     tibble::tibble(
       column_name = names(all_data),
       r_type      = vapply(all_data, function(x) class(x)[1], character(1)),
-      description = ""  # <-- add concise descriptions here
+      description = ""  # <-- I need to add concise descriptions here
     )
 
-Template (edit as needed):
+Template (edit later)
 
 | Column | Type | Description |
 |---|---|---|
