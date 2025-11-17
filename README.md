@@ -21,8 +21,8 @@ project-root/
 3. Reads each file and row-binds them with `readr::read_csv()`.
 4. Prints a compact structure of the first 10 columns.
 
-**Script used**
-## Install packages
+## Script used
+    ## Install packages
     install.packages("tidyverse")
     install.packages("here")
 
