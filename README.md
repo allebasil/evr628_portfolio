@@ -18,11 +18,11 @@ project-root/
 ## Script Overview
 1. Resolves paths relative to the project root with `here()`.
 2. Lists all `.csv` files in `data/Dendrometer_Data/`.
-3. Reads each file and row-binds them with `purrr::map_dfr()`.
+3. Reads each file and row-binds them with `readr::read_csv()`.
 4. Prints a compact structure of the first 10 columns.
 
-**Script used**
-## Install packages
+## Script used
+    ## Install packages
     install.packages("tidyverse")
     install.packages("here")
 
@@ -39,9 +39,9 @@ project-root/
                               full.names = TRUE)
 
     ## Read & combine all CSVs
-    all_data <- purrr::map_dfr(dendro_csvs,
-                               ~ readr::read_csv(.x, show_col_types = FALSE),
-                               .id = NULL)
+    all_data <- readr::read_csv(dendro_csvs,
+                            col_names = FALSE,
+                            show_col_types = FALSE)
 
     ## Check this actually happened
     str(all_data[, 1:10])
