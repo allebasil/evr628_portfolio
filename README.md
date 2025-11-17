@@ -18,7 +18,7 @@ project-root/
 ## Script Overview
 1. Resolves paths relative to the project root with `here()`.
 2. Lists all `.csv` files in `data/Dendrometer_Data/`.
-3. Reads each file and row-binds them with `purrr::map_dfr()`.
+3. Reads each file and row-binds them with `readr::read_csv()`.
 4. Prints a compact structure of the first 10 columns.
 
 **Script used**
