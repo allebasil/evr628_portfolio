@@ -28,7 +28,7 @@ clean_data <- clean_data |>
   mutate(
     datetime = as.POSIXct(
       datetime,
-      format = "%Y.%m.%d %H:%M",   # change if your format differs
+      format = "%Y.%m.%d %H:%M",
       tz = "America/New_York"
     ),
     date = as.Date(datetime)
@@ -57,7 +57,7 @@ data_rate <- clean_data |>
   filter(
     !is.na(growth_rate_um_per_h),
     dt_hours > 0,
-    abs(growth_rate_um_per_h) <= 200   # drop wild spikes
+    abs(growth_rate_um_per_h) <= 200   # drop impossible spikes
   )
 
 # VISUALIZE ####################################################################
@@ -101,7 +101,7 @@ p_temp_scatter <- data_rate |>
     plot.title = element_text(face = "bold")
   )
 
-## Plot 2B: Mean growth rate by temperature bin (no facets) --------------------
+## Plot 2B: Mean growth rate by temperature bin---------------------------------
 data_rate_binned <- data_rate |>
   mutate(
     temp_bin = cut(
