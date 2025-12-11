@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.32">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Isabella Childress">
+
+<title>Tree Growth Dynamics in the Gifford Arboretum</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="final_report_files/libs/clipboard/clipboard.min.js"></script>
+<script src="final_report_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="final_report_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="final_report_files/libs/quarto-html/popper.min.js"></script>
+<script src="final_report_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="final_report_files/libs/quarto-html/anchor.min.js"></script>
+<link href="final_report_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="final_report_files/libs/quarto-html/quarto-syntax-highlighting-37eea08aefeeee20ff55810ff984fec1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="final_report_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="final_report_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="final_report_files/libs/bootstrap/bootstrap-813c323200a87c37e262811031999de4.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+
+
+</head>
+
+<body class="quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="header-section-number">1</span> Introduction</a></li>
+  <li><a href="#objectives" id="toc-objectives" class="nav-link" data-scroll-target="#objectives"><span class="header-section-number">2</span> Objectives</a></li>
+  <li><a href="#data-sources" id="toc-data-sources" class="nav-link" data-scroll-target="#data-sources"><span class="header-section-number">3</span> Data sources</a>
+  <ul class="collapse">
+  <li><a href="#dendrometer-time-series" id="toc-dendrometer-time-series" class="nav-link" data-scroll-target="#dendrometer-time-series"><span class="header-section-number">3.1</span> Dendrometer time series</a></li>
+  <li><a href="#tree-metadata" id="toc-tree-metadata" class="nav-link" data-scroll-target="#tree-metadata"><span class="header-section-number">3.2</span> Tree metadata</a></li>
+  </ul></li>
+  <li><a href="#data-processing" id="toc-data-processing" class="nav-link" data-scroll-target="#data-processing"><span class="header-section-number">4</span> Data processing</a>
+  <ul class="collapse">
+  <li><a href="#combining-raw-logger-files" id="toc-combining-raw-logger-files" class="nav-link" data-scroll-target="#combining-raw-logger-files"><span class="header-section-number">4.1</span> Combining raw logger files</a></li>
+  <li><a href="#tidy-dendrometer-table" id="toc-tidy-dendrometer-table" class="nav-link" data-scroll-target="#tidy-dendrometer-table"><span class="header-section-number">4.2</span> Tidy dendrometer table</a></li>
+  <li><a href="#joining-tree-metadata" id="toc-joining-tree-metadata" class="nav-link" data-scroll-target="#joining-tree-metadata"><span class="header-section-number">4.3</span> Joining tree metadata</a></li>
+  <li><a href="#processed-dataset" id="toc-processed-dataset" class="nav-link" data-scroll-target="#processed-dataset"><span class="header-section-number">4.4</span> Processed dataset</a></li>
+  </ul></li>
+  <li><a href="#main-findings" id="toc-main-findings" class="nav-link" data-scroll-target="#main-findings"><span class="header-section-number">5</span> Main Findings</a>
+  <ul class="collapse">
+  <li><a href="#temporal-patterns-of-radial-growth" id="toc-temporal-patterns-of-radial-growth" class="nav-link" data-scroll-target="#temporal-patterns-of-radial-growth"><span class="header-section-number">5.1</span> Temporal patterns of radial growth</a></li>
+  <li><a href="#growth-temperature-relationships" id="toc-growth-temperature-relationships" class="nav-link" data-scroll-target="#growth-temperature-relationships"><span class="header-section-number">5.2</span> Growth-temperature relationships</a></li>
+  <li><a href="#spatial-patterns-of-tree-size-and-growth" id="toc-spatial-patterns-of-tree-size-and-growth" class="nav-link" data-scroll-target="#spatial-patterns-of-tree-size-and-growth"><span class="header-section-number">5.3</span> Spatial patterns of tree size and growth</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="header-section-number">6</span> References</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tree Growth Dynamics in the Gifford Arboretum</h1>
+<p class="subtitle lead">Dendrometer-based analysis of radial growth, temperature, and spatial patterns</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Isabella Childress </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<pre><code>label: setup
+include: false
+
+library(tidyverse)
+library(here)
+library(lubridate)
+library(sf)
+library(ggspatial)
+library(cowplot)
+library(rnaturalearth)
+
+# Load processed dendrometer data (Assignment 2 output)
+dendro_clean &lt;- readr::read_rds(
+  here("data", "processed", "dendrometer_clean.rds")
+)
+
+# Basic summaries for inline code
+n_sensors &lt;- dendro_clean |&gt; distinct(sensor_id) |&gt; nrow()
+n_species &lt;- dendro_clean |&gt; distinct(species_name) |&gt; nrow()
+
+date_range &lt;- range(dendro_clean$datetime, na.rm = TRUE)
+date_start &lt;- as.Date(date_range[1])
+date_end   &lt;- as.Date(date_range[2])</code></pre>
+<section id="introduction" class="level2" data-number="1">
+<h2 data-number="1" class="anchored" data-anchor-id="introduction"><span class="header-section-number">1</span> Introduction</h2>
+<p>Continuous dendrometer measurements provide a powerful way to quantify how tree stems expand and contract in response to both long-term growth and short-term environmental variation. In this project, I use dendrometer data from the Gifford Arboretum at the University of Miami to explore how radial growth varies over time, how growth rates relate to air temperature, and how tree size and growth are distributed across the arboretum.</p>
+<p>The dataset analyzed here includes high-frequency dendrometer readings from <code>n_sensors</code> sensors installed on individually tagged trees representing <code>n_species</code> species, monitored between <code>date_start</code> and <code>date_end</code>. The analyses build on previous assignments focused on data wrangling, visualization, and spatial mapping, and bring them together into a single narrative.</p>
+</section>
+<section id="objectives" class="level2" data-number="2">
+<h2 data-number="2" class="anchored" data-anchor-id="objectives"><span class="header-section-number">2</span> Objectives</h2>
+<p>The main objective of this report is to synthesize information from the cleaned dendrometer dataset to address the following questions:</p>
+<ol type="1">
+<li><strong>Temporal dynamics</strong><br>
+How does radial growth accumulate over time for individual trees, and how variable are these trajectories among sensors?</li>
+<li><strong>Growth–temperature relationships</strong><br>
+How do short-term radial growth rates relate to air temperature, and are there temperature ranges associated with higher average growth rates?</li>
+<li><strong>Spatial patterns of size and growth</strong><br>
+How are tree size (current DBH) and recent DBH increment distributed across the Gifford Arboretum, and do any broad spatial patterns emerge?</li>
+</ol>
+</section>
+<section id="data-sources" class="level2" data-number="3">
+<h2 data-number="3" class="anchored" data-anchor-id="data-sources"><span class="header-section-number">3</span> Data sources</h2>
+<section id="dendrometer-time-series" class="level3" data-number="3.1">
+<h3 data-number="3.1" class="anchored" data-anchor-id="dendrometer-time-series"><span class="header-section-number">3.1</span> Dendrometer time series</h3>
+<p>The primary data source is a set of raw dendrometer logger files exported as semicolon-delimited <code>.csv</code> files, one per sensor, stored in <code>data/Dendrometer_Data/</code>. Each file records:</p>
+<ul>
+<li><p>A record ID (internal logger index)</p></li>
+<li><p>A timestamp (date and time)</p></li>
+<li><p>Air temperature in °C</p></li>
+<li><p>A cumulative radial-growth value in micrometres (µm)</p></li>
+</ul>
+<p>These files were combined and cleaned in the data wrangling script (<code>scripts/01_processing/data_wrangling_dendro.R</code>) to produce a single tidy dataset (<code>dendrometer_clean.rds</code>) containing all sensors and their associated metadata.</p>
+</section>
+<section id="tree-metadata" class="level3" data-number="3.2">
+<h3 data-number="3.2" class="anchored" data-anchor-id="tree-metadata"><span class="header-section-number">3.2</span> Tree metadata</h3>
+<p>Dendrometer time series were linked to tree-level metadata stored in <code>data/gifford_dendro_tree_meta.csv</code>, including:</p>
+<ul>
+<li><p>Dendrometer ID (sensor ID)</p></li>
+<li><p>Species name</p></li>
+<li><p>Initial diameter at breast height (DBH) in cm</p></li>
+<li><p>Latitude and longitude of each tree</p></li>
+</ul>
+<p>These variables allow tree-level summaries (e.g., current DBH, DBH increment) and enable spatial visualization of sensor locations.</p>
+</section>
+</section>
+<section id="data-processing" class="level2" data-number="4">
+<h2 data-number="4" class="anchored" data-anchor-id="data-processing"><span class="header-section-number">4</span> Data processing</h2>
+<p>This section summarizes the main processing steps used to go from raw logger files and metadata to an analysis-ready dataset. Full code is documented in the data wrangling script.</p>
+<section id="combining-raw-logger-files" class="level3" data-number="4.1">
+<h3 data-number="4.1" class="anchored" data-anchor-id="combining-raw-logger-files"><span class="header-section-number">4.1</span> Combining raw logger files</h3>
+<p>All raw <code>.csv</code> files in <code>data/Dendrometer_Data/</code> were read and combined into a single tibble. During import, a file column was added to track each row’s source file. The sensor ID was extracted from the filename and stored as <code>sensor_id</code>.</p>
+<p>Key steps:</p>
+<ol type="1">
+<li><p>List raw files with <code>list.files()</code> and a <code>pattern = "\\.csv$"</code> filter</p></li>
+<li><p>Read and combine with <code>readr::read_delim()</code> using <code>delim = ";"</code></p></li>
+<li><p>Extract <code>sensor_id</code> from each filename using <code>stringr::str_extract()</code></p></li>
+</ol>
+</section>
+<section id="tidy-dendrometer-table" class="level3" data-number="4.2">
+<h3 data-number="4.2" class="anchored" data-anchor-id="tidy-dendrometer-table"><span class="header-section-number">4.2</span> Tidy dendrometer table</h3>
+<p>From the combined table, the following variables were created:</p>
+<ul>
+<li><p><code>record_id</code> – logger record ID</p></li>
+<li><p><code>sensor_id</code> – sensor identifier extracted from filename</p></li>
+<li><p><code>datetime</code> – parsed using <code>lubridate::parse_date_time()</code> with <code>"Y.m.d H:M"</code> format</p></li>
+<li><p><code>air_temp_C</code> – air temperature in °C</p></li>
+<li><p><code>radial_growth_um</code> – cumulative radial growth in µm</p></li>
+</ul>
+<p>Intermediate raw-date columns were dropped, and the resulting dataset was stored in <code>tidy_data</code>.</p>
+</section>
+<section id="joining-tree-metadata" class="level3" data-number="4.3">
+<h3 data-number="4.3" class="anchored" data-anchor-id="joining-tree-metadata"><span class="header-section-number">4.3</span> Joining tree metadata</h3>
+<p>Tree metadata were read from <code>gifford_dendro_tree_meta.csv</code>, and key columns were standardized:</p>
+<ul>
+<li><p><code>sensor_id</code> (character)</p></li>
+<li><p><code>species_name</code></p></li>
+<li><p><code>initial_dbh_cm</code></p></li>
+<li><p><code>lat</code></p></li>
+<li><p><code>lon</code></p></li>
+</ul>
+<p>This metadata was joined to the time series by <code>sensor_id</code> using <code>dplyr::left_join()</code>, producing <code>dendro_clean</code>, which contains both time-varying (growth, temperature) and time-invariant (species, location, initial DBH) variables.</p>
+</section>
+<section id="processed-dataset" class="level3" data-number="4.4">
+<h3 data-number="4.4" class="anchored" data-anchor-id="processed-dataset"><span class="header-section-number">4.4</span> Processed dataset</h3>
+<p>The final processed dataset, saved as <code>data/processed/dendrometer_clean.rds</code>, contains one row per sensor-time combination with the following key columns:</p>
+<ul>
+<li><code>sensor_id</code></li>
+<li><code>species_name</code></li>
+<li><code>initial_dbh_cm</code></li>
+<li><code>lat</code></li>
+<li><code>lon</code></li>
+<li><code>datetime</code></li>
+<li><code>air_temp_C</code></li>
+<li><code>radial_growth_um</code></li>
+</ul>
+<p>This is the dataset used for all subsequent visualizations.</p>
+</section>
+</section>
+<section id="main-findings" class="level2" data-number="5">
+<h2 data-number="5" class="anchored" data-anchor-id="main-findings"><span class="header-section-number">5</span> Main Findings</h2>
+<section id="temporal-patterns-of-radial-growth" class="level3" data-number="5.1">
+<h3 data-number="5.1" class="anchored" data-anchor-id="temporal-patterns-of-radial-growth"><span class="header-section-number">5.1</span> Temporal patterns of radial growth</h3>
+<p>To explore how growth accumulates over time, I visualized radial growth trajectories for each sensor.</p>
+<pre><code>#| label: prep-time-series
+
+# Start from the processed data and prepare for plotting
+clean_data &lt;- dendro_clean |&gt;
+mutate(
+datetime = as.POSIXct(
+datetime, 
+format = "%Y.%m.%d %H:%M", 
+tz = "America/New_York" ), 
+date = as.Date(datetime) 
+) |&gt;
+
+# Filter out impossible air temperatures 
+filter( 
+air_temp_C &gt;= 0, 
+air_temp_C &lt;= 45 
+)</code></pre>
+<pre><code>#| label: fig-time-series
+#| fig-cap: "Radial growth trajectories over time for each dendrometer sensor in the Gifford Arboretum."
+#| fig-width: 8
+#| fig-height: 6
+
+p_time &lt;- clean_data |&gt;
+ggplot(aes(x = datetime,
+y = radial_growth_um,
+colour = sensor_id,
+group = sensor_id)) +
+geom_line(linewidth = 0.4) +
+labs(
+title   = "Radial growth over time by sensor",
+x       = "Date",
+y       = "Radial growth (µm)",
+colour  = "Sensor ID",
+caption = "Gifford Arboretum dendrometer data."
+) +
+facet_wrap(~ sensor_id, scales = "free_y") +
+scale_x_datetime(
+date_breaks = "6 months",
+date_labels = "%b\n%y"
+) +
+theme_bw(base_size = 10) +
+theme(
+legend.position = "none",
+plot.title      = element_text(face = "bold"),
+axis.text.x     = element_text(size = 6)
+)
+
+p_time</code></pre>
+<p><img src="results/img/radial_growth_time_series.png" class="img-fluid"></p>
+<p>These trajectories show how cumulative radial growth increased over the monitoring period. Some sensors display relatively smooth, gradual increases, whereas others show more irregular patterns, suggesting differences in tree growth dynamics, microenvironment, or data gaps.</p>
+</section>
+<section id="growth-temperature-relationships" class="level3" data-number="5.2">
+<h3 data-number="5.2" class="anchored" data-anchor-id="growth-temperature-relationships"><span class="header-section-number">5.2</span> Growth-temperature relationships</h3>
+<p>To examine how short-term growth responds to temperature, I computed growth rates between successive readings and related these to air temperature.</p>
+<pre><code>#| label: prep-growth-rate
+
+data_rate &lt;- clean_data |&gt;
+arrange(sensor_id, datetime) |&gt;
+group_by(sensor_id) |&gt;
+mutate(
+radial_growth_diff_um = radial_growth_um - dplyr::lag(radial_growth_um),
+dt_hours              = as.numeric(
+difftime(datetime,
+dplyr::lag(datetime),
+units = "hours")
+),
+growth_rate_um_per_h  = radial_growth_diff_um / dt_hours
+) |&gt;
+ungroup() |&gt;
+
+# Keep only sensible intervals
+
+filter(
+!is.na(growth_rate_um_per_h),
+dt_hours &gt; 0,
+abs(growth_rate_um_per_h) &lt;= 200   # drop impossible spikes
+)</code></pre>
+<pre><code>#| label: fig-temp-scatter
+#| fig-cap: "Relationship between radial growth rate and air temperature (A) and mean growth rate by temperature bin (B)."
+#| fig-width: 8
+#| fig-height: 8
+
+# Scatter: growth rate vs temperature
+
+p_temp_scatter &lt;- data_rate |&gt;
+ggplot(aes(x = air_temp_C, y = growth_rate_um_per_h)) +
+geom_point(alpha = 0.3) +
+geom_smooth(se = TRUE, colour = "blue") +
+labs(
+title   = "Growth rate as a function of air temperature",
+x       = "Air temperature (°C)",
+y       = "Radial growth rate (µm/hour)",
+caption = "Points represent intervals between successive logger readings."
+) +
+theme_bw(base_size = 11) +
+theme(
+plot.title = element_text(face = "bold")
+)
+
+# Bin temperatures and compute mean growth rate
+
+data_rate_binned &lt;- data_rate |&gt;
+mutate(
+temp_bin = cut(
+air_temp_C,
+breaks = seq(10, 40, by = 2)
+)
+) |&gt;
+filter(!is.na(temp_bin)) |&gt;
+group_by(temp_bin) |&gt;
+summarize(
+mean_rate = mean(growth_rate_um_per_h, na.rm = TRUE),
+.groups   = "drop"
+)
+
+p_temp_binned &lt;- ggplot(data_rate_binned,
+aes(x = temp_bin, y = mean_rate)) +
+geom_col() +
+labs(
+title   = "Mean growth rate by air temperature bin",
+x       = "Air temperature bin (°C)",
+y       = "Mean radial growth rate (µm/hour)",
+caption = "Bars show average growth rate within each temperature bin."
+) +
+theme_bw(base_size = 11) +
+theme(
+axis.text.x = element_text(angle = 45, hjust = 1),
+plot.title  = element_text(face = "bold")
+)
+
+growth_temp_panel &lt;- cowplot::plot_grid(
+p_temp_scatter,
+p_temp_binned,
+ncol   = 1,
+labels = c("A", "B")
+)
+
+growth_temp_panel</code></pre>
+<p><img src="results/img/growth_vs_temperature.png" class="img-fluid"></p>
+<p>The scatterplot suggests a non-linear relationship between temperature and growth rate, with growth generally increasing with temperature up to an intermediate range before declining at the highest temperatures. The binned means further highlight temperature ranges associated with higher average growth, providing a coarse summary of “favorable” versus “less favorable” thermal conditions for radial expansion.</p>
+</section>
+<section id="spatial-patterns-of-tree-size-and-growth" class="level3" data-number="5.3">
+<h3 data-number="5.3" class="anchored" data-anchor-id="spatial-patterns-of-tree-size-and-growth"><span class="header-section-number">5.3</span> Spatial patterns of tree size and growth</h3>
+<p>Finally, I summarized the dendrometer data to the tree level and mapped current tree diameter and DBH increment across the Gifford Arboretum.</p>
+<pre><code>#| label: prep-spatial
+
+# Collapse to one row per sensor / tree
+
+dendro_sites &lt;- dendro_clean |&gt;
+group_by(sensor_id, species_name, initial_dbh_cm, lat, lon) |&gt;
+summarize(
+max_radial_growth_um = max(radial_growth_um, na.rm = TRUE),
+.groups = "drop"
+) |&gt;
+mutate(
+# radial_growth_um is change in radius (µm); 1 µm = 1e-4 cm
+delta_radius_cm = max_radial_growth_um * 1e-4,
+delta_dbh_cm    = 2 * delta_radius_cm,
+current_dbh_cm  = initial_dbh_cm + delta_dbh_cm
+) |&gt;
+rename(
+species        = species_name,
+dbh_current_cm = current_dbh_cm,
+dbh_change_cm  = delta_dbh_cm
+) |&gt;
+select(sensor_id, species, dbh_current_cm, dbh_change_cm, lat, lon) |&gt;
+filter(
+!is.na(lat),
+!is.na(lon),
+!is.na(dbh_current_cm),
+!is.na(dbh_change_cm)
+)
+
+# Convert to sf object
+
+dendro_sf &lt;- dendro_sites |&gt;
+st_as_sf(coords = c("lon", "lat"), crs = 4326)  # WGS84
+
+# Bounding box and dynamic padding
+
+bbox  &lt;- st_bbox(dendro_sf)
+x_pad &lt;- as.numeric(bbox["xmax"] - bbox["xmin"]) * 0.15
+y_pad &lt;- as.numeric(bbox["ymax"] - bbox["ymin"]) * 0.15
+
+# Base map: USA outline for context
+
+world &lt;- rnaturalearth::ne_countries(scale = "medium", returnclass = "sf")
+usa   &lt;- world |&gt; dplyr::filter(admin == "United States of America")</code></pre>
+<pre><code>#| label: fig-map
+#| fig-cap: "Spatial distribution, size, and DBH increment of dendrometer trees in the Gifford Arboretum."
+#| fig-width: 7
+#| fig-height: 6
+
+p_dendro_struct &lt;- ggplot() +
+
+# Base layer for geographic context
+
+geom_sf(data = usa, fill = "grey95", color = "grey80") +
+
+# Dendrometer trees:
+
+# size = estimated current DBH
+
+# fill = DBH increment (growth)
+
+geom_sf(
+data  = dendro_sf,
+aes(size = dbh_current_cm, fill = dbh_change_cm),
+shape = 21,
+color = "black",
+alpha = 0.9
+) +
+
+# Zoom in tightly around the arboretum
+
+coord_sf(
+xlim   = c(bbox["xmin"] - x_pad, bbox["xmax"] + x_pad),
+ylim   = c(bbox["ymin"] - y_pad, bbox["ymax"] + y_pad),
+expand = FALSE
+) +
+
+# North arrow &amp; scale bar
+
+annotation_north_arrow(
+location    = "tr",
+which_north = "true",
+style       = north_arrow_fancy_orienteering
+) +
+annotation_scale(
+location   = "bl",
+width_hint = 0.3
+) +
+
+# Scales &amp; labels
+
+scale_size_continuous(
+name  = "Current DBH (cm)",
+range = c(2, 10)
+) +
+scale_fill_viridis_c(
+name   = "DBH increment (cm)",
+option = "C"
+) +
+
+labs(
+title    = "Spatial pattern, size, and growth of trees in the Gifford Arboretum",
+subtitle = "Point size shows current DBH; color shows change in DBH since start of monitoring",
+caption  = "Data: dendrometer_clean (processed dendrometer dataset).\nBasemap: Natural Earth. Projection: WGS84 (EPSG:4326)."
+) +
+theme_bw(base_size = 11) +
+theme(
+legend.position  = "right",
+panel.grid.major = element_line(linewidth = 0.2),
+panel.background = element_rect(fill = "aliceblue"),
+panel.border     = element_rect(color = "black", fill = NA),
+aspect.ratio     = 1
+)
+
+p_dendro_struct</code></pre>
+<p><img src="results/img/gifford_dendrometer_structure_growth.png" class="img-fluid"></p>
+<p>Most trees are clustered within the arboretum, and the map reveals variation in both current DBH and DBH increment across the site. Larger, presumably older trees often show substantial growth increments, but smaller individuals also contribute, suggesting a mix of size classes and growth strategies within the collection.</p>
+</section>
+</section>
+<section id="references" class="level2" data-number="6">
+<h2 data-number="6" class="anchored" data-anchor-id="references"><span class="header-section-number">6</span> References</h2>
+<ul>
+<li><p>Dendrometer and tree metadata from the Gifford Arboretum (University of Miami).</p></li>
+<li><p>Natural Earth data for basemap country polygons (USA).</p></li>
+<li><p>Course materials and assignment descriptions from EVR 628 – Intro to Environmental Data Scnce.</p></li>
+</ul>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
